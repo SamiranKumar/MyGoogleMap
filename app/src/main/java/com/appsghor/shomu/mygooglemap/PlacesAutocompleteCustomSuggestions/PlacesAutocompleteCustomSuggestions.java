@@ -1,17 +1,16 @@
 package com.appsghor.shomu.mygooglemap.PlacesAutocompleteCustomSuggestions;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.appsghor.shomu.mygooglemap.R;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,7 +19,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 public class PlacesAutocompleteCustomSuggestions extends AppCompatActivity implements LoaderCallbacks<Cursor>,OnMapReadyCallback {

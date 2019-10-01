@@ -1,19 +1,19 @@
 package com.appsghor.shomu.mygooglemap;
 
-import android.*;
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.multidex.MultiDex;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.appsghor.shomu.mygooglemap.DrawingDrivingRoute.DrawingDrivingRoute;
-import com.appsghor.shomu.mygooglemap.PlacesAutocompleteCustomSuggestions.PlacesAutocompleteCustomSuggestions;
+import com.appsghor.shomu.mygooglemap.util.PermissionsUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,10 +36,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-,LocationListener {
+        , LocationListener {
 
     GoogleMap mGoogleMap;
     GoogleApiClient googleApiClient;
@@ -52,11 +54,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         if (isGoogleServicesAvailable()) {
             setContentView(R.layout.activity_main);
-           // startActivity(new Intent(this,Main2Activity.class));
-           //startActivity(new Intent(this,PathGoogleMapActivity.class));
-          // startActivity(new Intent(this,DrawingDrivingRoute.class));
-           //startActivity(new Intent(this,PlacesAutocompleteCustomSuggestions.class));
-           initatizeMap();
+            // startActivity(new Intent(this,Main2Activity.class));
+            //startActivity(new Intent(this,PathGoogleMapActivity.class));
+            // startActivity(new Intent(this,DrawingDrivingRoute.class));
+            //startActivity(new Intent(this,PlacesAutocompleteCustomSuggestions.class));
+
+
+            List<String> permissionsList = new ArrayList<>();
+            permissionsList.add(Manifest.permission.CAMERA);
+
+            PermissionsUtil.checkPermissions(this, permissionsList, isGranted -> {
+                if (isGranted) {
+                    initatizeMap();
+                } else {
+                    Timber.e("Permissions is Granted:" + isGranted);
+                }
+            });
+
+
         } else {
             ///implement other     set other layout (google map if unsupported)
         }
@@ -195,14 +210,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.GET_PERMISSIONS){
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.GET_PERMISSIONS) {
 
             }
 
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,locationRequest, MainActivity.this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, MainActivity.this);
 
     }
 
@@ -219,11 +234,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
 
-        if(location ==null){
+        if (location == null) {
             Toast.makeText(this, "Cann't Get current Location: ", Toast.LENGTH_LONG).show();
-        }else {
-            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
+        } else {
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
             mGoogleMap.animateCamera(cameraUpdate);
         }
     }
