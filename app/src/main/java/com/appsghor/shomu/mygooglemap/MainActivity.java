@@ -176,7 +176,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(mGoogleMap==null){
+            return false;
+        }
+
         switch (item.getItemId()) {
+
             case R.id.map_type_none:
                 mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
                 break;
